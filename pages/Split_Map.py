@@ -27,7 +27,7 @@ m = leafmap.Map(center=(23.8, 121), zoom=7)
 
 for data in aqi_data:
     color = "green" if data["AQI"] <= 50 else "orange" if data["AQI"] <= 100 else "red"
-    m.add_marker(
+    m.add_circle(
         location=(data["latitude"], data["longitude"]),
         radius=10,
         color=color,
