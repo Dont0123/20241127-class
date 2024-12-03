@@ -13,7 +13,6 @@ st.sidebar.info(markdown)
 logo = "https://i.imgur.com/UbOXYAU.png"
 st.sidebar.image(logo)
 
-st.set_page_config(layout="wide")
 st.title("AQI map")
 
 aqi_data = [
