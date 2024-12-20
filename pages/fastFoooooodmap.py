@@ -12,7 +12,6 @@ geojson_url = "https://raw.githubusercontent.com/Dont0123/Dont123/refs/heads/mai
 # 創建 Leafmap 地圖，使用 folium 库來處理點擊事件
 m = folium.Map(location=[23.8, 121], zoom_start=7)
 
-# 加載 GeoJSON 資料
 try:
     response = requests.get(geojson_url)
     geojson_data = response.json()
@@ -24,8 +23,8 @@ except Exception as e:
 # 顯示地圖
 output = st_folium(m, width=725)
 
-# 如果用戶點擊地圖，獲取點擊位置的經緯度
-if output:
+# 檢查 `output` 是否包含 `lat` 和 `lon`
+if output and 'lat' in output and 'lon' in output:
     click_location = (output['lat'], output['lon'])
     st.write(f"點擊的地點：{click_location}")
 
@@ -52,3 +51,5 @@ if output:
 
     # 顯示更新後的地圖
     st_folium(m, width=725)
+else:
+    st.warning("未捕獲點擊位置。請點擊地圖上的某個位置。")
