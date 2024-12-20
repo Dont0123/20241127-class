@@ -26,19 +26,10 @@ geojson_url = "https://raw.githubusercontent.com/Dont0123/Dont123/refs/heads/mai
 
 m = leafmap.Map(center=(23.8, 121), zoom=7)
 
-for data in aqi_data:
-    color = "green" if data["AQI"] <= 50 else "orange" if data["AQI"] <= 100 else "red"
-    m.add_marker(
-        location=(data["latitude"], data["longitude"]),
-        radius=10,
-        color=color,
-        fill=True,
-        fill_color=color,
-        popup=f"{data['city']} AQI: {data['AQI']}",
-    )
+try:
+    m.add_geojson(geojson_url, layer_name="GeoJSON Data")
+    st.success("GeoJSON 檔案加載成功！")
+except Exception as e:
+    st.error(f"無法加載 GeoJSON 檔案：{e}")
 
 m.to_streamlit(height=600)
-
-st.header("AQI data")
-st.table(aqi_data)
-
