@@ -1,6 +1,7 @@
 import streamlit as st
 import leafmap.foliumap as leafmap
 import requests
+import geopy
 from geopy.distance import geodesic
 
 st.set_page_config(layout="wide")
