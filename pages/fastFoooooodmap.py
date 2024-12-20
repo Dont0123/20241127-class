@@ -25,6 +25,29 @@ def on_map_click(event):
     lat = event.latlng[0]
     lon = event.latlng[1]
     st.write(f"您點擊的位置是：經度 {lon}, 緯度 {lat}")
+    
+    # 計算周圍 500 公尺的所有點
+    nearby_points = []
+    for feature in geojson_data['features']:
+        if feature['geometry']['type'] == 'Point':
+            point = feature['geometry']['coordinates']
+            point_coords = (point[1], point[0])  # (lat, lon)
+            
+            # 計算距離
+            distance = geodesic((lat, lon), point_coords).meters
+            if distance <= 500:
+                nearby_points.append(feature)
+    
+    # 顯示周圍 500 公尺的所有點
+    if nearby_points:
+        st.write(f"找到 {len(nearby_points)} 個點在500公尺範圍內。")
+        # 顯示這些點
+        for point in nearby_points:
+            point_lat = point['geometry']['coordinates'][1]
+            point_lon = point['geometry']['coordinates'][0]
+            folium.Marker([point_lat, point_lon], popup="Nearby Point").add_to(m)
+    else:
+        st.write("周圍 500 公尺內沒有找到任何點。")
 
 # 設置 Folium 的點擊事件監聽
 m.add_child(folium.ClickForMarker(popup="Clicked here!").add_to(m))
