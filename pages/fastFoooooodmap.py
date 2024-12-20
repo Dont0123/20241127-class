@@ -36,16 +36,20 @@ def on_map_click(event):
             # 計算距離
             distance = geodesic((lat, lon), point_coords).meters
             if distance <= 500:
-                nearby_points.append(feature)
+                # 將符合條件的點加入 nearby_points 列表
+                nearby_points.append({
+                    "名稱": feature.get('properties', {}).get('name', '無名稱'),
+                    "經度": point[0],
+                    "緯度": point[1],
+                    "距離(公尺)": round(distance, 2)
+                })
     
     # 顯示周圍 500 公尺的所有點
     if nearby_points:
         st.write(f"找到 {len(nearby_points)} 個點在500公尺範圍內。")
-        # 顯示這些點
-        for point in nearby_points:
-            point_lat = point['geometry']['coordinates'][1]
-            point_lon = point['geometry']['coordinates'][0]
-            folium.Marker([point_lat, point_lon], popup="Nearby Point").add_to(m)
+        # 使用 Pandas 顯示表格
+        df = pd.DataFrame(nearby_points)
+        st.dataframe(df)
     else:
         st.write("周圍 500 公尺內沒有找到任何點。")
 
@@ -57,3 +61,4 @@ output = st_folium(m, width=725)
 
 # 顯示更新後的地圖
 st_folium(m, width=725)
+
