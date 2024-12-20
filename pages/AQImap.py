@@ -13,15 +13,16 @@ st.sidebar.info(markdown)
 logo = "https://i.imgur.com/UbOXYAU.png"
 st.sidebar.image(logo)
 
-st.title("AQI map")
+st.title("GeoJSON Viewer with Streamlit")
+st.markdown(
+    """
+    此應用程式使用 [Streamlit](https://streamlit.io) 和 [Leafmap](https://leafmap.org) 加載並顯示 GeoJSON 檔案。  
+    你現在加載的是來自 GitHub 的 GeoJSON 檔案。
+    """
+)
 
-aqi_data = [
-    {"city": "台北", "latitude": 25.0330, "longitude": 121.5654, "AQI": 85},
-    {"city": "台中", "latitude": 24.1477, "longitude": 120.6736, "AQI": 120},
-    {"city": "高雄", "latitude": 22.6273, "longitude": 120.3014, "AQI": 140},
-    {"city": "新竹", "latitude": 24.8066, "longitude": 120.9686, "AQI": 70},
-    {"city": "花蓮", "latitude": 23.9872, "longitude": 121.6016, "AQI": 50},
-]
+# GeoJSON 檔案連結
+geojson_url = "https://raw.githubusercontent.com/Dont0123/Dont123/refs/heads/main/MCDdata.geojson"
 
 m = leafmap.Map(center=(23.8, 121), zoom=7)
 
