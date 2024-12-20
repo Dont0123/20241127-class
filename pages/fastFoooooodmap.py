@@ -20,36 +20,17 @@ try:
 except Exception as e:
     st.error(f"無法加載 GeoJSON 檔案：{e}")
 
+# 創建一個點擊事件處理函數，這樣可以捕捉地圖的點擊位置
+def on_map_click(event):
+    lat = event.latlng[0]
+    lon = event.latlng[1]
+    st.write(f"您點擊的位置是：經度 {lon}, 緯度 {lat}")
+
+# 設置 Folium 的點擊事件監聽
+m.add_child(folium.ClickForMarker(popup="Clicked here!").add_to(m))
+
 # 顯示地圖
 output = st_folium(m, width=725)
 
-# 檢查 `output` 是否包含 `lat` 和 `lon`
-if output and 'lat' in output and 'lon' in output:
-    click_location = (output['lat'], output['lon'])
-    st.write(f"點擊的地點：{click_location}")
-
-    # 計算周圍 500 公尺的所有點
-    nearby_points = []
-    for feature in geojson_data['features']:
-        # 假設每個點都有 "geometry" 屬性，並且為 "Point"
-        if feature['geometry']['type'] == 'Point':
-            point = feature['geometry']['coordinates']
-            point_coords = (point[1], point[0])  # (lat, lon)
-            
-            # 計算距離
-            distance = geodesic(click_location, point_coords).meters
-            if distance <= 500:
-                nearby_points.append(feature)
-    
-    # 顯示周圍 500 公尺的所有點
-    if nearby_points:
-        st.write(f"找到 {len(nearby_points)} 個點在500公尺範圍內。")
-        # 將篩選出的點顯示在地圖上
-        folium.GeoJson({'type': 'FeatureCollection', 'features': nearby_points}).add_to(m)
-    else:
-        st.write("周圍 500 公尺內沒有找到任何點。")
-
-    # 顯示更新後的地圖
-    st_folium(m, width=725)
-else:
-    st.warning("未捕獲點擊位置。請點擊地圖上的某個位置。")
+# 顯示更新後的地圖
+st_folium(m, width=725)
