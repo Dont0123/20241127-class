@@ -20,7 +20,7 @@ try:
 except Exception as e:
     st.error(f"无法加载 GeoJSON 文件：{e}")
 
-# 通过 st_folium 显示地图并等待用户点击
+# 使用 st_folium 显示地图
 output = st_folium(m, width=725)
 
 # 判断用户是否点击了地图
