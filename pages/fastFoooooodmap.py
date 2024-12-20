@@ -20,18 +20,15 @@ try:
 except Exception as e:
     st.error(f"無法加載 GeoJSON 檔案：{e}")
 
-# 點擊地圖後顯示經緯度
-st.write("點擊地圖選擇位置")
+# 點擊地圖並添加標記
+click_marker = folium.Marker([23.8, 121])  # 初始位置
+click_marker.add_to(m)
 
-# 用 st_folium 顯示地圖
-output = st_folium(m, width=725)
-
-# 確認是否有返回點擊的經緯度
-if output and 'lat' in output and 'lon' in output:
-    click_lat = output['lat']
-    click_lon = output['lon']
-    st.write(f"您點擊的位置：經度 {click_lon}, 緯度 {click_lat}")
-
+# 定義回調函數，用來顯示點擊位置
+def on_click(event):
+    lat, lon = event.latlng
+    st.write(f"您點擊的位置：經度 {lon}, 緯度 {lat}")
+    
     # 計算周圍500公尺的所有點
     nearby_points = []
     for feature in geojson_data['features']:
@@ -40,7 +37,7 @@ if output and 'lat' in output and 'lon' in output:
             point_coords = (point[1], point[0])  # (lat, lon)
 
             # 計算距離
-            distance = geodesic((click_lat, click_lon), point_coords).meters
+            distance = geodesic((lat, lon), point_coords).meters
             if distance <= 500:
                 nearby_points.append({
                     "名稱": feature.get('properties', {}).get('name', '無名稱'),
@@ -56,5 +53,9 @@ if output and 'lat' in output and 'lon' in output:
         st.dataframe(df)
     else:
         st.write("周圍500公尺內沒有找到任何點。")
-else:
-    st.write("請點擊地圖選擇位置。")
+
+# 在地圖上註冊點擊事件
+m.on('click', on_click)
+
+# 使用 streamlit_folium 顯示地圖並等待用戶交互
+output = st_folium(m, width=725)
