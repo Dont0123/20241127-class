@@ -3,7 +3,7 @@ import folium
 import requests
 import geopy
 from geopy.distance import geodesic
-from streamlit_folium import st_folium
+from streamlit-folium import st_folium
 
 # GeoJSON 檔案連結
 geojson_url = "https://raw.githubusercontent.com/Dont0123/Dont123/refs/heads/main/MCDdata.geojson"
