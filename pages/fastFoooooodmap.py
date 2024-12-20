@@ -20,11 +20,14 @@ try:
 except Exception as e:
     st.error(f"無法加載 GeoJSON 檔案：{e}")
 
-# 在地圖上捕捉點擊位置
+# 點擊地圖後顯示經緯度
+st.write("點擊地圖選擇位置")
+
+# 用 st_folium 顯示地圖
 output = st_folium(m, width=725)
 
-# 如果點擊了地圖
-if output:
+# 確認是否有返回點擊的經緯度
+if output and 'lat' in output and 'lon' in output:
     click_lat = output['lat']
     click_lon = output['lon']
     st.write(f"您點擊的位置：經度 {click_lon}, 緯度 {click_lat}")
@@ -53,3 +56,5 @@ if output:
         st.dataframe(df)
     else:
         st.write("周圍500公尺內沒有找到任何點。")
+else:
+    st.write("請點擊地圖選擇位置。")
